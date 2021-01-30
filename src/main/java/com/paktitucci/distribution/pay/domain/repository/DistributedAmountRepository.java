@@ -5,11 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 
 import javax.persistence.LockModeType;
+import java.util.Optional;
 
 public interface DistributedAmountRepository extends JpaRepository<DistributedAmount, Long> {
 
-    DistributedAmount findByDistributedAmountId(Long distributedAmountId);
-
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    DistributedAmount findByTokenAndRoomId(String token, String roomId);
+    Optional<DistributedAmount> findByTokenAndRoomId(String token, String roomId);
 }
