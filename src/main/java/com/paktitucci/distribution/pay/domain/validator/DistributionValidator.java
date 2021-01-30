@@ -35,13 +35,13 @@ public class DistributionValidator {
         }
     }
 
-    public void validateForGettingDistributedAmountHistory(DistributedAmount distributedAmount, Long requestUserId,
-                                                           String requestToken) {
+    public void validateGettingDistributionHistory(DistributedAmount distributedAmount, Long requestUserId,
+                                                   String requestToken) {
         if(!distributedAmount.isOwner(requestUserId)) {
             throw new DistributionException(ErrorCode.SEARCH_BY_NON_OWNER);
         }
 
-        if(distributedAmount.isValidToken(requestToken)) {
+        if(!distributedAmount.isValidToken(requestToken)) {
             throw new DistributionException(ErrorCode.SEARCH_BY_INVALID_TOKEN);
         }
 
