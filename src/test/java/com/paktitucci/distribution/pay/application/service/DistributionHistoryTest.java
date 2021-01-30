@@ -4,14 +4,12 @@ package com.paktitucci.distribution.pay.application.service;
 import com.paktitucci.distribution.pay.application.dto.Distribution;
 import com.paktitucci.distribution.pay.application.dto.DistributionHistory;
 import com.paktitucci.distribution.pay.application.dto.Receiving;
-import com.paktitucci.distribution.pay.domain.service.DistributedAmountService;
-import com.paktitucci.distribution.pay.domain.validator.DistributionValidator;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -23,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @EnableJpaRepositories(basePackages = "com.paktitucci.distribution.pay.domain.repository")
 @EntityScan(basePackages = "com.paktitucci.distribution.pay.domain.entity")
 @EnableJpaAuditing
-@SpringBootTest(classes = {ReceivingService.class, DistributionService.class, DistributedAmountService.class})
+@SpringBootTest(classes = {ReceivingService.class, DistributionService.class})
 public class DistributionHistoryTest {
 
     @Autowired
@@ -32,17 +30,10 @@ public class DistributionHistoryTest {
     @Autowired
     private ReceivingService receivingService;
 
-    @Autowired
-    private DistributedAmountService distributedAmountService;
-
-    @MockBean
-    private DistributionValidator distributionValidator;
-
-
-
 
     @Test
-    public void findTest() {
+    @DisplayName("뿌리기 건의 현재 상태 조회하는 서비스 테스트")
+    public void findDistributionHistoryTest() {
         Distribution.Request distributionRequest = Distribution.Request.builder()
                                                                     .userId(1L)
                                                                     .numbersOfMemberReceived(5)
@@ -83,8 +74,5 @@ public class DistributionHistoryTest {
                 .isEqualTo(distributionRequest.getAmount() -
                         receivingResponse1.getAmount() -
                         receivingResponse2.getAmount());
-
-
-
     }
 }
