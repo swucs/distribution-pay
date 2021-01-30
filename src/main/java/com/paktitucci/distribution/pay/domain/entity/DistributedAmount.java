@@ -9,7 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.security.DigestException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +121,30 @@ public class DistributedAmount {
                 requestOfSameRoomUser, roomId, requestRoomId);
 
         return requestOfSameRoomUser;
+    }
+
+    // 뿌린지 10분이 지났는지 확인하는 로직
+    public boolean isAfterMoreThanMinutes(int minutes) {
+        long secondsAfterDistribution = getDurationBetweenCreateDateAndNow().getSeconds();
+
+        return secondsAfterDistribution >= minutes;
+
+    }
+
+    // 뿌린 건 조회할 때 유효한 토큰인지 검증하는 로직
+    public boolean isValidToken(String requestToken) {
+        return this.token.equals(requestToken);
+    }
+
+    // 뿌린 건 조회할 때 일주일이 지났는지 확인하는 로직
+    public boolean isAfterMoreThanDays(int days) {
+        long daysAfterDistribution = getDurationBetweenCreateDateAndNow().toDays();
+
+        return daysAfterDistribution > days;
+    }
+
+    private Duration getDurationBetweenCreateDateAndNow() {
+        return Duration.between(createdDate, LocalDateTime.now());
     }
 
 }

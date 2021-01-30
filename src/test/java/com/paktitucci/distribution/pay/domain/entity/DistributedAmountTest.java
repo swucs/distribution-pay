@@ -161,4 +161,23 @@ public class DistributedAmountTest {
 
         return distributedAmount;
     }
+
+    @Test
+    public void isValidTokenTest() {
+        // given
+        DistributedAmount distributedAmount = DistributedAmount.builder()
+                                                            .amount(10000L)
+                                                            .numbersOfMemberReceived(5)
+                                                            .ownerId(1L)
+                                                            .roomId("room")
+                                                            .token("pay")
+                                                            .build();
+        String requestToken = "pad";
+
+        // when
+        boolean validToken = distributedAmount.isValidToken(requestToken);
+
+        // then
+        assertThat(validToken).isFalse();
+    }
 }
