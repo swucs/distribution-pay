@@ -45,6 +45,7 @@ public class DistributionHistory {
 
         private static ReceivedInfos from(List<DistributedAmountDetail> distributedAmountDetails) {
             return new ReceivedInfos(distributedAmountDetails.stream()
+                                                            .filter(detail -> detail.getReceivedUserId() != null)
                                                             .map(detail ->
                                                                     ReceivedInfo.builder()
                                                                                 .amount(detail.getAmount())
