@@ -17,20 +17,23 @@ public class DistributionServiceTest {
 
     @Autowired
     private DistributionService distributionService;
-    
+
     @MockBean
     private DistributedAmountService distributedAmountService;
+
+    @MockBean
+    private DistributionValidator distributionValidator;
 
     @Test
     @DisplayName("뿌리기 테스트")
     public void distributionTest() {
         // given
         Distribution.Request request = Distribution.Request.builder()
-                .amount(10000L)
-                .numbersOfMemberReceived(5)
-                .roomId("room")
-                .userId(1L)
-                .build();
+                                                        .amount(10000L)
+                                                        .numbersOfMemberReceived(5)
+                                                        .roomId("room")
+                                                        .userId(1L)
+                                                        .build();
         // when
         Distribution.Response response = distributionService.distributeAmount(request);
 
