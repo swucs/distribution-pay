@@ -1,11 +1,14 @@
 package com.paktitucci.distribution.pay.utils.token;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.Random;
 
 import static java.util.stream.Collectors.joining;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TokenGenerator {
     private static final char[] elements = {
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',

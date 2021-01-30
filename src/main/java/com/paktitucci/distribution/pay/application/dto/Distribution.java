@@ -8,6 +8,8 @@ import lombok.*;
 public class Distribution {
 
     @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @Builder
     public static class Request {
         private static final int TOKEN_LENGTH = 3;
 
@@ -15,14 +17,6 @@ public class Distribution {
         private final String roomId;
         private final long amount;
         private final int numbersOfMemberReceived;
-
-        @Builder
-        public Request(Long userId, String roomId, long amount, int numbersOfMemberReceived) {
-            this.userId = userId;
-            this.roomId = roomId;
-            this.amount = amount;
-            this.numbersOfMemberReceived = numbersOfMemberReceived;
-        }
 
         public DistributedAmount toDistributedAmount() {
             return DistributedAmount.builder()
@@ -37,12 +31,9 @@ public class Distribution {
     }
 
     @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @Builder
     public static class Response {
         private final String token;
-
-        @Builder
-        public Response(String token) {
-            this.token = token;
-        }
     }
 }
