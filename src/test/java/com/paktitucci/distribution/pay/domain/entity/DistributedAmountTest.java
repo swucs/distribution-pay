@@ -121,7 +121,7 @@ public class DistributedAmountTest {
     public void isAlreadyReceivedTest() {
         // given
         DistributedAmount distributedAmount = getDistributedAmountParameter();
-        distributedAmount.getDistributedAmountDetails().get(0).receiveAmount(128374L);
+        distributedAmount.getDistributedAmountDetails().get(0).assignUser(128374L);
 
         // when
         boolean alreadyReceived = distributedAmount.isAlreadyReceived(128374L);

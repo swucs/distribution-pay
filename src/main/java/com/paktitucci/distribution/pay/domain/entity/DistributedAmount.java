@@ -18,15 +18,14 @@ import java.util.List;
 @Entity
 @Table(
         uniqueConstraints = {
-            @UniqueConstraint(
-                columnNames = {"token"}
-            )
+                @UniqueConstraint(
+                        columnNames = {"token", "roomId"}
+                )
         }
-    )
+)
 @ToString
 @NoArgsConstructor
 @Getter
-@EqualsAndHashCode(of = "distributedAmountId")
 @EntityListeners(AuditingEntityListener.class)
 public class DistributedAmount {
     @Id
@@ -43,7 +42,9 @@ public class DistributedAmount {
 
     private int numbersOfMemberReceived;
 
-    @OneToMany(mappedBy = "distributedAmount", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "distributed_amount_id")
+    //@OneToMany(mappedBy = "distributedAmount")
     private List<DistributedAmountDetail> distributedAmountDetails = new ArrayList<>();
 
     @CreatedDate
@@ -56,12 +57,12 @@ public class DistributedAmount {
     @Builder
     public DistributedAmount(long amount, int numbersOfMemberReceived, @NonNull String token,
                              @NonNull String roomId, @NonNull Long ownerId) {
-        if(amount <= 0) {
+        if (amount <= 0) {
             log.error("Amount for distribution is less than 0. amount = [{}]", amount);
             throw new DistributionException(ErrorCode.AMOUNT_IS_BATTER_THAN_ZERO);
         }
 
-        if(numbersOfMemberReceived <= 0) {
+        if (numbersOfMemberReceived <= 0) {
             log.error("Numbers of member received is less than 0. numbersOfMemberReceived = [{}]", numbersOfMemberReceived);
             throw new DistributionException(ErrorCode.NUMBERS_OF_MEMBER_RECEIVED_IS_LESS_THAN_ZERO);
         }
@@ -76,17 +77,17 @@ public class DistributedAmount {
     // 분배하는 로직 수행
     public void distributeToMembers() {
         long remainAmount = amount;
-        for(int i = numbersOfMemberReceived; i > 0; i--) {
-            if(i == 1) {
+        for (int i = numbersOfMemberReceived; i > 0; i--) {
+            if (i == 1) {
                 distributedAmountDetails.add(DistributedAmountDetail.builder()
-                                                                    .amount(remainAmount)
-                                                                    .build());
+                        .amount(remainAmount)
+                        .build());
                 break;
             }
             long currentAmount = (long) (Math.random() * (remainAmount / i));
             distributedAmountDetails.add(DistributedAmountDetail.builder()
-                                                                .amount(currentAmount)
-                                                                .build());
+                    .amount(currentAmount)
+                    .build());
             remainAmount -= currentAmount;
         }
     }
@@ -95,9 +96,9 @@ public class DistributedAmount {
     public boolean isAlreadyReceived(Long requestUserId) {
         boolean alreadyReceived =
                 distributedAmountDetails.stream()
-                                        .map(distributedAmountDetail -> distributedAmountDetail.getReceivedUserId())
-                                        .filter(receivedUserId -> receivedUserId != null)
-                                        .anyMatch(receivedUserId -> receivedUserId.equals(requestUserId));
+                        .map(distributedAmountDetail -> distributedAmountDetail.getReceivedUserId())
+                        .filter(receivedUserId -> receivedUserId != null)
+                        .anyMatch(receivedUserId -> receivedUserId.equals(requestUserId));
         log.info("[Check if you already received it] requestUserId = [{}], alreadyReceived = [{}]",
                 requestUserId, alreadyReceived);
 
@@ -141,6 +142,21 @@ public class DistributedAmount {
         long daysAfterDistribution = getDurationBetweenCreateDateAndNow().toDays();
 
         return daysAfterDistribution > days;
+    }
+
+    // 뿌린 건 모두에게 할당되었는지 확인하는 로직
+    public boolean assignedAllUser() {
+        return distributedAmountDetails.stream()
+                .allMatch(detail -> detail.getReceivedUserId() != null &&
+                        detail.getReceivedDateTime() != null);
+    }
+
+    public DistributedAmountDetail getDistributedAmountDetailNoAssignedToUser() {
+        return distributedAmountDetails.stream()
+                .filter(detail -> detail.getReceivedUserId() == null &&
+                        detail.getReceivedDateTime() == null)
+                .findFirst()
+                .get();
     }
 
     private Duration getDurationBetweenCreateDateAndNow() {

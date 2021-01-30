@@ -2,11 +2,9 @@ package com.paktitucci.distribution.pay.domain.entity;
 
 import com.paktitucci.distribution.pay.domain.code.ErrorCode;
 import com.paktitucci.distribution.pay.domain.exception.DistributionException;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -33,9 +31,9 @@ public class DistributedAmountDetail {
 
     private LocalDateTime receivedDateTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    /*@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "distributed_amount_id")
-    private DistributedAmount distributedAmount;
+    private DistributedAmount distributedAmount;*/
 
     @CreatedDate
     @Column(updatable = false)
@@ -46,7 +44,7 @@ public class DistributedAmountDetail {
 
     @Builder
     public DistributedAmountDetail(long amount) {
-        if(amount <= 0) {
+        if(amount < 0) {
             log.error("Amount of members received is less than 0. amount = [{}]", amount);
             throw new DistributionException(ErrorCode.AMOUNT_IS_BATTER_THAN_ZERO);
         }
@@ -54,7 +52,7 @@ public class DistributedAmountDetail {
         this.amount = amount;
     }
 
-    public void receiveAmount(Long requestUserId) {
+    public void assignUser(Long requestUserId) {
         this.receivedUserId = requestUserId;
         this.receivedDateTime = LocalDateTime.now();
     }
