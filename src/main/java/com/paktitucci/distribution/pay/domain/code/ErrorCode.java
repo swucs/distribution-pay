@@ -15,7 +15,8 @@ public enum ErrorCode {
     REQUEST_FROM_ANOTHER_ROOM_USER(-1005, "해당 방 사람의 요청이 아닙니다."),
     SEARCH_BY_NON_OWNER(-1006, "뿌린 사람이 아니면 조회가 불가능합니다."),
     SEARCH_BY_INVALID_TOKEN(-1007, "유효하지 않은 토큰으로 조회하였습니다."),
-    EXPIRE_VALID_TIME_TO_SEARCH(-1008, "조회할 수 있는 기간이 지났습니다.");
+    EXPIRE_VALID_TIME_TO_SEARCH(-1008, "조회할 수 있는 기간이 지났습니다."),
+    ALL_USER_RECEIVED(-1009, "모든 유저가 뿌린 돈을 받았습니다.");
 
     private int code;
     private String message;
