@@ -31,13 +31,13 @@ public class DistributionService {
 
 
     @Transactional(readOnly = true)
-    public DistributionHistory findDistributionHistory(DistributionHistory.Request request) {
+    public DistributionHistory.Response findDistributionHistory(DistributionHistory.Request request) {
         DistributedAmount distributedAmount =
                 distributedAmountService.findByTokenAndRoomId(request.getToken(), request.getRoomId())
                         .orElseThrow(() -> new DistributionException(ErrorCode.NOT_EXIST_DISTRIBUTED_AMOUNT));
         distributionValidator.validateGettingDistributionHistory(distributedAmount, request.getUserId(), request.getToken());
 
-        return DistributionHistory.from(distributedAmount);
+        return DistributionHistory.Response.from(distributedAmount);
 
     }
 

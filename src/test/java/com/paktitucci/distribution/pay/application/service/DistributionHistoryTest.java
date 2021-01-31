@@ -68,7 +68,7 @@ public class DistributionHistoryTest {
                                         .userId(1L)
                                         .build();
 
-        DistributionHistory distributionHistory =
+        DistributionHistory.Response distributionHistory =
                 distributionService.findDistributionHistory(distributionHistoryRequest);
 
         assertThat(distributionHistory).isNotNull();
