@@ -4,7 +4,6 @@ import com.paktitucci.distribution.pay.domain.code.ErrorCode;
 import com.paktitucci.distribution.pay.domain.exception.DistributionException;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -31,9 +30,9 @@ public class DistributedAmountDetail {
 
     private LocalDateTime receivedDateTime;
 
-    /*@ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "distributed_amount_id")
-    private DistributedAmount distributedAmount;*/
+    private DistributedAmount distributedAmount;
 
     @CreatedDate
     @Column(updatable = false)

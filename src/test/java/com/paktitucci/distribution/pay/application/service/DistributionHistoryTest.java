@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,6 +33,7 @@ public class DistributionHistoryTest {
 
 
     @Test
+    @Transactional
     @DisplayName("뿌리기 건의 현재 상태 조회하는 서비스 테스트")
     public void findDistributionHistoryTest() {
         Distribution.Request distributionRequest = Distribution.Request.builder()

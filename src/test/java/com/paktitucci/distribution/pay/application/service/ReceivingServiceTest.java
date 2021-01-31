@@ -5,6 +5,7 @@ import com.paktitucci.distribution.pay.application.dto.Distribution;
 import com.paktitucci.distribution.pay.application.dto.Receiving;
 import com.paktitucci.distribution.pay.domain.service.DistributedAmountService;
 import com.paktitucci.distribution.pay.domain.validator.DistributionValidator;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,13 +31,9 @@ public class ReceivingServiceTest {
     @Autowired
     private DistributionService distributionService;
 
-    @Autowired
-    private DistributedAmountService distributedAmountService;
-
-    @Autowired
-    private DistributionValidator distributionValidator;
-
     @Test
+    @DisplayName("뿌린 돈 받기 정상적으로 되는지 테스트")
+    @Transactional
     public void receivingTest() {
 
         // given

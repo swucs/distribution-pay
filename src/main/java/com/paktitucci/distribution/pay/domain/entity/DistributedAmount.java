@@ -42,9 +42,7 @@ public class DistributedAmount {
 
     private int numbersOfMemberReceived;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "distributed_amount_id")
-    //@OneToMany(mappedBy = "distributedAmount")
+    @OneToMany(mappedBy = "distributedAmount", cascade = CascadeType.ALL)
     private List<DistributedAmountDetail> distributedAmountDetails = new ArrayList<>();
 
     @CreatedDate
