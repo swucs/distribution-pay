@@ -54,7 +54,7 @@ public class ReceivingControllerTest {
 
 
         // when
-        ResultActions resultActions = mockMvc.perform(get("/distributed-amount/{token}", "dJR")
+        ResultActions resultActions = mockMvc.perform(patch("/distributed-amount/{token}", "dJR")
                                                     .accept(MediaType.APPLICATION_JSON_VALUE)
                                                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                     .header(X_USER_ID, 2L)
