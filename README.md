@@ -30,7 +30,7 @@ java -jar build/libs/pay-1.0.0-SNAPSHOT.jar
 ```
 
 
-문제 해결 전략
+## 문제 해결 전략
 
 - Token이 중복되면 안 된다는 요구사항이 있지 않아 중복 체크 로직은 만들지 않았다. 대신에 distributed_amount 테이블의 Unique Index 제약 조건으로 넣었다.
 - 뿌린 금액 받기를 할 때 여러 사용자가 동시에 요청하는 경우 금액 차감이 중복으로 발생할 수도 있는데, 이 문제를 해결하기 위해서 비관적락을 이용하였다. (JPA의 PERSSIMISTIC_WRITE LOCK 이용)
@@ -51,11 +51,14 @@ X-USER-ID: 1
 Content-Type: application/json
 
 RequestBody:
-{"amount": 10000, "numbersOfMemberReceived": 3}
+{
+    "amount": 10000, 
+    "numbersOfMemberReceived": 3
+}
 
 [RESPONSE]
 {
-  "token": "D1q"
+    "token": "D1q"
 }
 ```
 
@@ -71,7 +74,7 @@ token : D1q
 
 [RESPONSE]
 {
-  "amount": 3644
+    "amount": 3644
 }
 ```
 
@@ -87,14 +90,14 @@ token : D1q
 
 [RESPONSE]
 {
-	"distributedDateTime": "2021-02-01T20:40:57",
-  "totalAmount": 10000,
-  "receivedAmount": 6356,
-  "receivedInfos": [
-      {
-          "amount": 3644,
-          "userId": 2
-      }
-  ]
+    "distributedDateTime": "2021-02-01T20:40:57",
+    "totalAmount": 10000,
+    "receivedAmount": 6356,
+    "receivedInfos": [
+        {
+            "amount": 3644,
+            "userId": 2
+        }
+    ]
 }
 ```
