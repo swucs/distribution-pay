@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class DistributedAmountDetail {
+public class DistributedAmountDetailEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,7 @@ public class DistributedAmountDetail {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "distributed_amount_id")
-    private DistributedAmount distributedAmount;
+    private DistributedAmountEntity distributedAmountEntity;
 
     @CreatedDate
     @Column(updatable = false)
@@ -42,13 +42,14 @@ public class DistributedAmountDetail {
     private LocalDateTime modifiedDate;
 
     @Builder
-    public DistributedAmountDetail(long amount) {
+    public DistributedAmountDetailEntity(long amount, DistributedAmountEntity distributedAmountEntity) {
         if(amount < 0) {
             log.error("Amount of members received is less than 0. amount = [{}]", amount);
             throw new DistributionException(ErrorCode.AMOUNT_IS_BATTER_THAN_ZERO);
         }
 
         this.amount = amount;
+        this.distributedAmountEntity = distributedAmountEntity;
     }
 
     public void assignUser(Long requestUserId) {

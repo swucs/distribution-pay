@@ -4,9 +4,6 @@ import com.paktitucci.distribution.pay.application.dto.Receiving;
 import lombok.*;
 
 public class ReceivedAmountDto {
-
-
-
     @Getter
     public static class Response {
         private long amount;

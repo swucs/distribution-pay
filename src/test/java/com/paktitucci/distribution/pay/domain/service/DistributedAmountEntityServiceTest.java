@@ -1,6 +1,6 @@
 package com.paktitucci.distribution.pay.domain.service;
 
-import com.paktitucci.distribution.pay.domain.entity.DistributedAmount;
+import com.paktitucci.distribution.pay.domain.entity.DistributedAmountEntity;
 import com.paktitucci.distribution.pay.domain.exception.DistributionException;
 import com.paktitucci.distribution.pay.domain.validator.DistributionValidator;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 @EntityScan(basePackages = "com.paktitucci.distribution.pay.domain.entity")
 @EnableJpaAuditing
 @SpringBootTest(classes = {DistributedAmountService.class})
-public class DistributedAmountServiceTest {
+public class DistributedAmountEntityServiceTest {
 
     @Autowired
     private DistributedAmountService distributedAmountService;
@@ -44,7 +44,7 @@ public class DistributedAmountServiceTest {
 
         try(MockedStatic<LocalDateTime> time = mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS)) {
             time.when(LocalDateTime::now).thenReturn(currentDateTime);
-            DistributedAmount distributedAmount = DistributedAmount.builder()
+            DistributedAmountEntity distributedAmountEntity = DistributedAmountEntity.builder()
                                                                 .amount(10000L)
                                                                 .ownerId(1L)
                                                                 .roomId("room")
@@ -52,10 +52,10 @@ public class DistributedAmountServiceTest {
                                                                 .token("agf")
                                                                 .build();
 
-            distributedAmountService.save(distributedAmount);
+            distributedAmountService.save(distributedAmountEntity);
             time.when(LocalDateTime::now).thenReturn(tenMinutesLater);
             assertThrows(DistributionException.class, () ->
-                    distributionValidator.validateForReceiving(distributedAmount, 2L, "room"));
+                    distributionValidator.validateForReceiving(distributedAmountEntity, 2L, "room"));
         }
     }
 
@@ -67,7 +67,7 @@ public class DistributedAmountServiceTest {
 
         try(MockedStatic<LocalDateTime> time = mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS)) {
             time.when(LocalDateTime::now).thenReturn(currentDateTime);
-            DistributedAmount distributedAmount = DistributedAmount.builder()
+            DistributedAmountEntity distributedAmountEntity = DistributedAmountEntity.builder()
                                                                 .amount(10000L)
                                                                 .ownerId(1L)
                                                                 .roomId("room")
@@ -75,9 +75,9 @@ public class DistributedAmountServiceTest {
                                                                 .token("dkt")
                                                                 .build();
 
-            distributedAmountService.save(distributedAmount);
+            distributedAmountService.save(distributedAmountEntity);
             time.when(LocalDateTime::now).thenReturn(tenMinutesLater);
-            assertDoesNotThrow(() -> distributionValidator.validateForReceiving(distributedAmount, 2L, "room"));
+            assertDoesNotThrow(() -> distributionValidator.validateForReceiving(distributedAmountEntity, 2L, "room"));
         }
     }
 }

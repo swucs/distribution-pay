@@ -3,7 +3,7 @@ package com.paktitucci.distribution.pay.application.service;
 import com.paktitucci.distribution.pay.application.dto.Distribution;
 import com.paktitucci.distribution.pay.application.dto.DistributionHistory;
 import com.paktitucci.distribution.pay.domain.code.ErrorCode;
-import com.paktitucci.distribution.pay.domain.entity.DistributedAmount;
+import com.paktitucci.distribution.pay.domain.entity.DistributedAmountEntity;
 import com.paktitucci.distribution.pay.domain.exception.DistributionException;
 import com.paktitucci.distribution.pay.domain.service.DistributedAmountService;
 import com.paktitucci.distribution.pay.domain.validator.DistributionValidator;
@@ -20,24 +20,24 @@ public class DistributionService {
 
     @Transactional
     public Distribution.Response distributeAmount(Distribution.Request request) {
-        DistributedAmount distributedAmount = request.toDistributedAmount();
+        DistributedAmountEntity distributedAmountEntity = request.toDistributedAmount();
 
-        distributedAmountService.save(distributedAmount);
+        distributedAmountService.save(distributedAmountEntity);
 
         return Distribution.Response.builder()
-                                    .token(distributedAmount.getToken())
+                                    .token(distributedAmountEntity.getToken())
                                     .build();
     }
 
 
     @Transactional(readOnly = true)
     public DistributionHistory.Response findDistributionHistory(DistributionHistory.Request request) {
-        DistributedAmount distributedAmount =
+        DistributedAmountEntity distributedAmountEntity =
                 distributedAmountService.findByTokenAndRoomId(request.getToken(), request.getRoomId())
                         .orElseThrow(() -> new DistributionException(ErrorCode.NOT_EXIST_DISTRIBUTED_AMOUNT));
-        distributionValidator.validateGettingDistributionHistory(distributedAmount, request.getUserId(), request.getToken());
+        distributionValidator.validateGettingDistributionHistory(distributedAmountEntity, request.getUserId(), request.getToken());
 
-        return DistributionHistory.Response.from(distributedAmount);
+        return DistributionHistory.Response.from(distributedAmountEntity);
 
     }
 

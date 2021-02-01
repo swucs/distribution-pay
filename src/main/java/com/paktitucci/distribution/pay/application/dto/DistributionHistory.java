@@ -1,12 +1,7 @@
 package com.paktitucci.distribution.pay.application.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.paktitucci.distribution.pay.domain.entity.DistributedAmount;
-import com.paktitucci.distribution.pay.domain.entity.DistributedAmountDetail;
+import com.paktitucci.distribution.pay.domain.entity.DistributedAmountEntity;
+import com.paktitucci.distribution.pay.domain.entity.DistributedAmountDetailEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -37,14 +32,14 @@ public class DistributionHistory {
         private final long receivedAmount;
         private final List<ReceivedInfo> receivedInfos;
 
-        public static Response from(DistributedAmount distributedAmount) {
-            ReceivedInfos receivedInfos = ReceivedInfos.from(distributedAmount.getDistributedAmountDetails());
+        public static Response from(DistributedAmountEntity distributedAmountEntity) {
+            ReceivedInfos receivedInfos = ReceivedInfos.from(distributedAmountEntity.getDistributedAmountDetailEntities());
 
             return Response.builder()
-                    .distributedDateTime(distributedAmount.getCreatedDate())
-                    .totalAmount(distributedAmount.getAmount())
+                    .distributedDateTime(distributedAmountEntity.getCreatedDate())
+                    .totalAmount(distributedAmountEntity.getAmount())
                     .receivedInfos(receivedInfos.receivedInfos)
-                    .receivedAmount(distributedAmount.getAmount() - receivedInfos.getTotalReceivedAmount())
+                    .receivedAmount(distributedAmountEntity.getAmount() - receivedInfos.getTotalReceivedAmount())
                     .build();
         }
 
@@ -52,8 +47,8 @@ public class DistributionHistory {
         private static class ReceivedInfos {
             private final List<ReceivedInfo> receivedInfos;
 
-            private static ReceivedInfos from(List<DistributedAmountDetail> distributedAmountDetails) {
-                return new ReceivedInfos(distributedAmountDetails.stream()
+            private static ReceivedInfos from(List<DistributedAmountDetailEntity> distributedAmountDetailEntities) {
+                return new ReceivedInfos(distributedAmountDetailEntities.stream()
                         .filter(detail -> detail.getReceivedUserId() != null)
                         .map(detail ->
                                 ReceivedInfo.builder()

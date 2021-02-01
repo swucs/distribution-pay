@@ -27,7 +27,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-public class DistributedAmount {
+public class DistributedAmountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long distributedAmountId;
@@ -42,8 +42,8 @@ public class DistributedAmount {
 
     private int numbersOfMemberReceived;
 
-    @OneToMany(mappedBy = "distributedAmount", cascade = CascadeType.ALL)
-    private List<DistributedAmountDetail> distributedAmountDetails = new ArrayList<>();
+    @OneToMany(mappedBy = "distributedAmountEntity", cascade = CascadeType.ALL)
+    private List<DistributedAmountDetailEntity> distributedAmountDetailEntities = new ArrayList<>();
 
     @CreatedDate
     @Column(updatable = false)
@@ -53,8 +53,8 @@ public class DistributedAmount {
     private LocalDateTime modifiedDate;
 
     @Builder
-    public DistributedAmount(long amount, int numbersOfMemberReceived, @NonNull String token,
-                             @NonNull String roomId, @NonNull Long ownerId) {
+    public DistributedAmountEntity(long amount, int numbersOfMemberReceived, @NonNull String token,
+                                   @NonNull String roomId, @NonNull Long ownerId) {
         if (amount <= 0) {
             log.error("Amount for distribution is less than 0. amount = [{}]", amount);
             throw new DistributionException(ErrorCode.AMOUNT_IS_BATTER_THAN_ZERO);
@@ -73,28 +73,32 @@ public class DistributedAmount {
     }
 
     // 분배하는 로직 수행
-    public void distributeToMembers() {
+    public void distributeByNumbersOfMemberReceived() {
         long remainAmount = amount;
         for (int i = numbersOfMemberReceived; i > 0; i--) {
             if (i == 1) {
-                distributedAmountDetails.add(DistributedAmountDetail.builder()
-                        .amount(remainAmount)
-                        .build());
+                addDistributedAmountDetails(remainAmount);
                 break;
             }
             long currentAmount = (long) (Math.random() * (remainAmount / i));
-            distributedAmountDetails.add(DistributedAmountDetail.builder()
-                    .amount(currentAmount)
-                    .build());
+            addDistributedAmountDetails(currentAmount);
             remainAmount -= currentAmount;
         }
+    }
+
+    private void addDistributedAmountDetails(long amount) {
+        DistributedAmountDetailEntity amountDetail = DistributedAmountDetailEntity.builder()
+                                                                    .amount(amount)
+                                                                    .distributedAmountEntity(this)
+                                                                    .build();
+        distributedAmountDetailEntities.add(amountDetail);
     }
 
     // 이미 받은 사람인지 체크하는 로직
     public boolean isAlreadyReceived(Long requestUserId) {
         boolean alreadyReceived =
-                distributedAmountDetails.stream()
-                        .map(distributedAmountDetail -> distributedAmountDetail.getReceivedUserId())
+                distributedAmountDetailEntities.stream()
+                        .map(distributedAmountDetailEntity -> distributedAmountDetailEntity.getReceivedUserId())
                         .filter(receivedUserId -> receivedUserId != null)
                         .anyMatch(receivedUserId -> receivedUserId.equals(requestUserId));
         log.info("[Check if you already received it] requestUserId = [{}], alreadyReceived = [{}]",
@@ -144,13 +148,13 @@ public class DistributedAmount {
 
     // 뿌린 건 모두에게 할당되었는지 확인하는 로직
     public boolean assignedAllUser() {
-        return distributedAmountDetails.stream()
+        return distributedAmountDetailEntities.stream()
                 .allMatch(detail -> detail.getReceivedUserId() != null &&
                         detail.getReceivedDateTime() != null);
     }
 
-    public DistributedAmountDetail getDistributedAmountDetailNoAssignedToUser() {
-        return distributedAmountDetails.stream()
+    public DistributedAmountDetailEntity getDistributedAmountDetailNoAssignedToUser() {
+        return distributedAmountDetailEntities.stream()
                 .filter(detail -> detail.getReceivedUserId() == null &&
                         detail.getReceivedDateTime() == null)
                 .findFirst()

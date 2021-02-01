@@ -1,7 +1,7 @@
 package com.paktitucci.distribution.pay.application.dto;
 
 
-import com.paktitucci.distribution.pay.domain.entity.DistributedAmount;
+import com.paktitucci.distribution.pay.domain.entity.DistributedAmountEntity;
 import com.paktitucci.distribution.pay.utils.token.TokenGenerator;
 import lombok.*;
 
@@ -18,8 +18,8 @@ public class Distribution {
         private final long amount;
         private final int numbersOfMemberReceived;
 
-        public DistributedAmount toDistributedAmount() {
-            return DistributedAmount.builder()
+        public DistributedAmountEntity toDistributedAmount() {
+            return DistributedAmountEntity.builder()
                                     .amount(this.amount)
                                     .ownerId(this.userId)
                                     .numbersOfMemberReceived(this.numbersOfMemberReceived)
