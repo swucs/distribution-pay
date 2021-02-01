@@ -15,7 +15,7 @@ public class ReceivingController {
     private final ReceivingService receivingService;
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("distributed-amount/{token}")
+    @GetMapping("/distributed-amount/{token}")
     public ReceivedAmountDto.Response getDistributedAmount(
                                     @RequestHeader(value = "X-USER-ID") Long userId,
                                     @RequestHeader(value = "X-ROOM-ID") String roomId,
