@@ -41,7 +41,7 @@ public class DistributionController {
                                                                                             .token(token)
                                                                                             .build();
         DistributionHistory.Response distributionHistoryResponse =
-                distributionService.findDistributionHistory(distributionHistoryRequest);
+                distributionService.getDistributionHistory(distributionHistoryRequest);
 
         return DistributionHistoryDto.Response.from(distributionHistoryResponse);
 
