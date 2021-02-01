@@ -13,6 +13,6 @@ public class DistributionException extends RuntimeException {
 
     public DistributionException(ErrorCode errorCode) {
         super(errorCode.getMessage());
-        this.code = code;
+        this.code = errorCode.getCode();
     }
 }
