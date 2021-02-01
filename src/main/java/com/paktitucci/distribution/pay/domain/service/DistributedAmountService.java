@@ -1,7 +1,7 @@
 package com.paktitucci.distribution.pay.domain.service;
 
 
-import com.paktitucci.distribution.pay.domain.entity.DistributedAmount;
+import com.paktitucci.distribution.pay.domain.entity.DistributedAmountEntity;
 import com.paktitucci.distribution.pay.domain.repository.DistributedAmountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,13 +16,14 @@ public class DistributedAmountService {
     private final DistributedAmountRepository distributedAmountRepository;
 
     @Transactional
-    public DistributedAmount save(DistributedAmount distributedAmount) {
-        distributedAmount.distributeToMembers();
-        return distributedAmountRepository.save(distributedAmount);
+    public DistributedAmountEntity save(DistributedAmountEntity distributedAmountEntity) {
+        DistributedAmountEntity savedDistributedAmountEntity = distributedAmountRepository.save(distributedAmountEntity);
+        savedDistributedAmountEntity.distributeByNumbersOfMemberReceived();
+        return savedDistributedAmountEntity;
     }
 
     @Transactional(readOnly = true)
-    public Optional<DistributedAmount> findByTokenAndRoomId(String token, String roomId) {
+    public Optional<DistributedAmountEntity> findByTokenAndRoomId(String token, String roomId) {
         return distributedAmountRepository.findByTokenAndRoomId(token, roomId);
     }
 
