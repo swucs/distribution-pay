@@ -36,7 +36,6 @@ java -jar build/libs/pay-1.0.0-SNAPSHOT.jar
 - 뿌린 금액 받기를 할 때 여러 사용자가 동시에 요청하는 경우 금액 차감이 중복으로 발생할 수도 있는데, 이 문제를 해결하기 위해서 비관적락을 이용하였다. (JPA의 PERSSIMISTIC_WRITE LOCK 이용)
 - Layer 별 (Presentation Layer, Application Layer, Domain Layer)로 분리하여 각 모듈별 의존성을 최소화 하였고 각각의 테스트 케이스를 작성하였다.
 - amount가 0이면 안된다는 조건은 없어서 0원도 받을 수도 있게 하였다.
-- 받기 API는 서버 내부에서는 Update를 하기 때문에 Http Method를 PATCH로 처리하려고 했지만, API를 호출하는 클라이언트 입장에서는 받기이기 때문에 GET으로 처리하였다.
 
 ## API 명세
 
