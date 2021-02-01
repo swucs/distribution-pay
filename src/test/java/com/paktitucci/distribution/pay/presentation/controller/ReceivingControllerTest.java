@@ -5,6 +5,7 @@ import com.paktitucci.distribution.pay.application.dto.DistributionHistory;
 import com.paktitucci.distribution.pay.application.dto.Receiving;
 import com.paktitucci.distribution.pay.application.service.DistributionService;
 import com.paktitucci.distribution.pay.application.service.ReceivingService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -37,6 +38,7 @@ public class ReceivingControllerTest {
 
 
     @Test
+    @DisplayName("뿌리기 받는 것 요청하는 테스트")
     public void receivingTest() throws Exception{
 
         // given

@@ -39,6 +39,8 @@ public class DistributedAmountEntityServiceTest {
     @Test
     @DisplayName("뿌리기 10분 이후 만료되었는지 체크하는 테스트")
     public void expireReceiveAfterTenMinutesTest() {
+
+        // when
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalDateTime tenMinutesLater = currentDateTime.plusSeconds(600L);
 
@@ -54,6 +56,9 @@ public class DistributedAmountEntityServiceTest {
 
             distributedAmountService.save(distributedAmountEntity);
             time.when(LocalDateTime::now).thenReturn(tenMinutesLater);
+
+
+            // then
             assertThrows(DistributionException.class, () ->
                     distributionValidator.validateForReceiving(distributedAmountEntity, 2L, "room"));
         }
@@ -62,6 +67,8 @@ public class DistributedAmountEntityServiceTest {
     @Test
     @DisplayName("뿌리기 10분 전이기 때문에 유효성 체크 통과하는 테스트")
     public void notExpireReceiveBeforeTenMinutesTest() {
+
+        // when
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalDateTime tenMinutesLater = currentDateTime.plusSeconds(100L);
 
@@ -77,6 +84,8 @@ public class DistributedAmountEntityServiceTest {
 
             distributedAmountService.save(distributedAmountEntity);
             time.when(LocalDateTime::now).thenReturn(tenMinutesLater);
+
+            // then
             assertDoesNotThrow(() -> distributionValidator.validateForReceiving(distributedAmountEntity, 2L, "room"));
         }
     }

@@ -163,6 +163,7 @@ public class DistributedAmountEntityTest {
     }
 
     @Test
+    @DisplayName("유효한 Token인지 확인하는 테스트")
     public void isValidTokenTest() {
         // given
         DistributedAmountEntity distributedAmountEntity = DistributedAmountEntity.builder()

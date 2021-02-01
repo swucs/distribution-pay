@@ -36,6 +36,8 @@ public class DistributionHistoryTest {
     @Transactional
     @DisplayName("뿌리기 건의 현재 상태 조회하는 서비스 테스트")
     public void findDistributionHistoryTest() {
+
+        // given
         Distribution.Request distributionRequest = Distribution.Request.builder()
                                                                     .userId(1L)
                                                                     .numbersOfMemberReceived(5)
@@ -68,9 +70,11 @@ public class DistributionHistoryTest {
                                         .userId(1L)
                                         .build();
 
+        // when
         DistributionHistory.Response distributionHistory =
                 distributionService.getDistributionHistory(distributionHistoryRequest);
 
+        // then
         assertThat(distributionHistory).isNotNull();
         assertThat(distributionHistory.getReceivedAmount())
                 .isEqualTo(distributionRequest.getAmount() -
