@@ -69,7 +69,7 @@ public class DistributionHistoryTest {
                                         .build();
 
         DistributionHistory.Response distributionHistory =
-                distributionService.findDistributionHistory(distributionHistoryRequest);
+                distributionService.getDistributionHistory(distributionHistoryRequest);
 
         assertThat(distributionHistory).isNotNull();
         assertThat(distributionHistory.getReceivedAmount())

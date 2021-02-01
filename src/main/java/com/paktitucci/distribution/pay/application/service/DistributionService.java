@@ -2,9 +2,8 @@ package com.paktitucci.distribution.pay.application.service;
 
 import com.paktitucci.distribution.pay.application.dto.Distribution;
 import com.paktitucci.distribution.pay.application.dto.DistributionHistory;
-import com.paktitucci.distribution.pay.domain.code.ErrorCode;
+import com.paktitucci.distribution.pay.domain.dto.DistributionHistoryRequest;
 import com.paktitucci.distribution.pay.domain.entity.DistributedAmountEntity;
-import com.paktitucci.distribution.pay.domain.exception.DistributionException;
 import com.paktitucci.distribution.pay.domain.service.DistributedAmountService;
 import com.paktitucci.distribution.pay.domain.validator.DistributionValidator;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class DistributionService {
 
     private final DistributedAmountService distributedAmountService;
-    private final DistributionValidator distributionValidator;
 
     @Transactional
     public Distribution.Response distributeAmount(Distribution.Request request) {
         DistributedAmountEntity distributedAmountEntity = request.toDistributedAmount();
-
         distributedAmountService.save(distributedAmountEntity);
 
         return Distribution.Response.builder()
@@ -31,11 +28,10 @@ public class DistributionService {
 
 
     @Transactional(readOnly = true)
-    public DistributionHistory.Response findDistributionHistory(DistributionHistory.Request request) {
+    public DistributionHistory.Response getDistributionHistory(DistributionHistory.Request request) {
+        DistributionHistoryRequest distributionHistoryRequest = request.toDistributionHistoryRequest();
         DistributedAmountEntity distributedAmountEntity =
-                distributedAmountService.findByTokenAndRoomId(request.getToken(), request.getRoomId())
-                        .orElseThrow(() -> new DistributionException(ErrorCode.NOT_EXIST_DISTRIBUTED_AMOUNT));
-        distributionValidator.validateGettingDistributionHistory(distributedAmountEntity, request.getUserId(), request.getToken());
+                distributedAmountService.getDistributionHistory(distributionHistoryRequest);
 
         return DistributionHistory.Response.from(distributedAmountEntity);
 

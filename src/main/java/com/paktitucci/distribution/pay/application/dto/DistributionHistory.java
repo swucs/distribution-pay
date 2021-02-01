@@ -1,5 +1,6 @@
 package com.paktitucci.distribution.pay.application.dto;
 
+import com.paktitucci.distribution.pay.domain.dto.DistributionHistoryRequest;
 import com.paktitucci.distribution.pay.domain.entity.DistributedAmountEntity;
 import com.paktitucci.distribution.pay.domain.entity.DistributedAmountDetailEntity;
 import lombok.*;
@@ -20,6 +21,14 @@ public class DistributionHistory {
         private final String token;
         private final Long userId;
         private final String roomId;
+
+        public DistributionHistoryRequest toDistributionHistoryRequest() {
+            return DistributionHistoryRequest.builder()
+                                            .token(this.token)
+                                            .userId(this.userId)
+                                            .roomId(this.roomId)
+                                            .build();
+        }
     }
 
 

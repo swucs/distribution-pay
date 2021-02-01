@@ -5,6 +5,7 @@ import com.paktitucci.distribution.pay.application.dto.Distribution;
 import com.paktitucci.distribution.pay.application.dto.DistributionHistory;
 import com.paktitucci.distribution.pay.application.service.DistributionService;
 import com.paktitucci.distribution.pay.presentation.dto.DistributedAmountDto;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -40,6 +41,7 @@ public class DistributionControllerTest {
     private DistributionService distributionService;
 
     @Test
+    @DisplayName("뿌리기 테스트")
     public void distributeAmountTest() throws Exception {
 
         // given
@@ -71,6 +73,7 @@ public class DistributionControllerTest {
 
 
     @Test
+    @DisplayName("뿌리기 받은 내역 조회하는 테스트")
     public void getDistributedAmountHistoryTest() throws Exception {
 
         // given
@@ -89,7 +92,7 @@ public class DistributionControllerTest {
                         .receivedInfos(receivedInfos)
                         .build();
 
-        when(distributionService.findDistributionHistory(any())).thenReturn(distributionHistoryResponse);
+        when(distributionService.getDistributionHistory(any())).thenReturn(distributionHistoryResponse);
 
         // when
         ResultActions resultActions =

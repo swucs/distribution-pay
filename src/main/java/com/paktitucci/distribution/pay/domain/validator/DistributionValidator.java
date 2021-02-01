@@ -1,6 +1,7 @@
 package com.paktitucci.distribution.pay.domain.validator;
 
 import com.paktitucci.distribution.pay.domain.code.ErrorCode;
+import com.paktitucci.distribution.pay.domain.dto.DistributionHistoryRequest;
 import com.paktitucci.distribution.pay.domain.entity.DistributedAmountEntity;
 import com.paktitucci.distribution.pay.domain.exception.DistributionException;
 import lombok.extern.slf4j.Slf4j;
@@ -35,13 +36,17 @@ public class DistributionValidator {
         }
     }
 
-    public void validateGettingDistributionHistory(DistributedAmountEntity distributedAmountEntity, Long requestUserId,
-                                                   String requestToken) {
-        if(!distributedAmountEntity.isOwner(requestUserId)) {
+    public void validateGettingDistributionHistory(DistributedAmountEntity distributedAmountEntity,
+                                                   DistributionHistoryRequest request) {
+        if(!distributedAmountEntity.isOwner(request.getUserId())) {
             throw new DistributionException(ErrorCode.SEARCH_BY_NON_OWNER);
         }
 
-        if(!distributedAmountEntity.isValidToken(requestToken)) {
+        if(!distributedAmountEntity.isRequestOfSameRoomUser(request.getRoomId())) {
+            throw new DistributionException(ErrorCode.REQUEST_FROM_ANOTHER_ROOM_USER);
+        }
+
+        if(!distributedAmountEntity.isValidToken(request.getToken())) {
             throw new DistributionException(ErrorCode.SEARCH_BY_INVALID_TOKEN);
         }
 

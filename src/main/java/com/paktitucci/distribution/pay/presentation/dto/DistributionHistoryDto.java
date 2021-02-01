@@ -22,8 +22,6 @@ public class DistributionHistoryDto {
     @Builder
     public static class Response {
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-        @JsonSerialize(using = LocalDateTimeSerializer.class)
         private LocalDateTime distributedDateTime;
         private long totalAmount;
         private long receivedAmount;
