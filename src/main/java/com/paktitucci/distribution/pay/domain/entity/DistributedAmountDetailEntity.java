@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Entity
-@Table
+@Table(name = "distributed_amount_detail")
 @ToString
 @Getter
 @NoArgsConstructor
@@ -43,7 +43,7 @@ public class DistributedAmountDetailEntity {
 
     @Builder
     public DistributedAmountDetailEntity(long amount, DistributedAmountEntity distributedAmountEntity) {
-        if(amount < 0) {
+        if (amount < 0) {
             log.error("Amount of members received is less than 0. amount = [{}]", amount);
             throw new DistributionException(ErrorCode.AMOUNT_IS_BATTER_THAN_ZERO);
         }

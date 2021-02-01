@@ -17,9 +17,10 @@ import java.util.List;
 @Slf4j
 @Entity
 @Table(
+        name="distributed_amount",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        columnNames = {"token", "roomId"}
+                        columnNames = {"token"}
                 )
         }
 )
@@ -158,7 +159,7 @@ public class DistributedAmountEntity {
                 .filter(detail -> detail.getReceivedUserId() == null &&
                         detail.getReceivedDateTime() == null)
                 .findFirst()
-                .get();
+                .orElseThrow(() -> new DistributionException(ErrorCode.ALL_USER_RECEIVED));
     }
 
     private Duration getDurationBetweenCreateDateAndNow() {
